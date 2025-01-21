@@ -15,4 +15,17 @@ namespace Core.api.Models
         public string contactNo { get; set; }
         public string? city { get; set; }
     }
+
+    public class EmployeeDropModel
+    {
+        public int empId { get; set; }
+        public string empName { get; set; }
+    }
+
+    public class SearchEmployeeModel
+    {
+        public string? name { get; set; }
+        public string? email { get; set; }
+        public string? contactNo { get; set; }
+    }
 }

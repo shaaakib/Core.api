@@ -1,6 +1,7 @@
 ﻿using Core.api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Core.api.Controllers
 {
@@ -21,10 +22,67 @@ namespace Core.api.Controllers
             return list;
         }
 
+        [HttpGet("getDropDwonModel")]
+        public List<EmployeeDropModel> getDropDwonModel()
+        {
+            var list = (from emp in _context.EmployeeMaster
+                        select new EmployeeDropModel
+                        {
+                            empId = emp.empId,
+                            empName = emp.empName,
+                        }).ToList();
+
+            return list;
+        }
+
+        [HttpGet("searchEmployee")]
+        public List<EmployeeMaster> getSearchEmployee(string searchText)
+        {
+            var filterData = _context.EmployeeMaster.Where(s => s.empName == searchText).ToList();
+            return filterData;
+        }
+
+        [HttpGet("searchByNameEmployee")]
+        public List<EmployeeMaster> searchByNameEmployee(string searchText)
+        {
+            var filterData = _context.EmployeeMaster.Where(s => s.empName.StartsWith(searchText)).ToList();
+            var contextList = _context.EmployeeMaster.Where(t => t.empName.Contains(searchText)).ToList();
+            return filterData;
+        }
+
+        [HttpGet("searchMemberEmployee")]
+        public List<EmployeeMaster> searchMemberEmployee(string? name, string? email, string? contactNo)
+        {
+            var _memberList = (from emp in _context.EmployeeMaster
+                               where emp.empName != ""
+                               && (name == null || emp.empName.Contains(name))
+                               && (email == null || emp.email.StartsWith(email))
+                               && (contactNo == null || emp.contactNo.StartsWith(contactNo))
+                               select emp
+                               ).ToList();
+
+            return _memberList;
+        }
+
+        [HttpPost("searchMemberEmployeeObj")]
+        public List<EmployeeMaster> searchMemberEmployeeObj(SearchEmployeeModel obj)
+        {
+            var _memberList = (from emp in _context.EmployeeMaster
+                               where emp.empName != ""
+                               && (obj.name == null || emp.empName.Contains(obj.name))
+                               && (obj.email == null || emp.email.StartsWith(obj.email))
+                               && (obj.contactNo == null || emp.contactNo.StartsWith(obj.contactNo))
+                               select emp
+                               ).ToList();
+
+            return _memberList;
+        }
+
         [HttpGet("getEmployeeById")]
         public EmployeeMaster getEmployeeById(int id)
         {
             var singleRecored = _context.EmployeeMaster.SingleOrDefault(e => e.empId == id);
+      
             return singleRecored;
         }
 
