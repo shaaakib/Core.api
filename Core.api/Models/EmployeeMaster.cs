@@ -28,4 +28,17 @@ namespace Core.api.Models
         public string? email { get; set; }
         public string? contactNo { get; set; }
     }
+
+    public class commonResponseModel
+    {
+        public bool result { get; set; }
+        public string message { get; set; }
+        public object data { get; set; }
+        public commonResponseModel(bool result = false, string Message = "", object Data = null)
+        {
+            result = result;
+            message = Message;
+            data = Data;
+        }
+    }
 }

@@ -16,10 +16,24 @@ namespace Core.api.Controllers
         }
 
         [HttpGet("getAllEmployees")]
-        public List<EmployeeMaster> getAllEmployees()
+        public commonResponseModel getAllEmployees()
         {
-            var list = _context.EmployeeMaster.ToList();
-            return list;
+            commonResponseModel _res = new commonResponseModel();
+            try
+            {
+                var list = _context.EmployeeMaster.ToList();
+                _res.result = true;
+                _res.data = list;
+                return _res;
+            }
+            catch (Exception exp)
+            {
+                _res.result = false;
+                _res.message = exp.Message;
+                return _res;
+            }
+
+            
         }
 
         [HttpGet("getDropDwonModel")]
@@ -95,11 +109,26 @@ namespace Core.api.Controllers
         }
 
         [HttpPost("SaveEmployee")]
-        public EmployeeMaster SaveEmployee( EmployeeMaster obj)
+        public commonResponseModel SaveEmployee( EmployeeMaster obj)
         {
-            _context.EmployeeMaster.Add(obj);
-            _context.SaveChanges();
-            return obj;
+            commonResponseModel _res = new commonResponseModel();
+            try
+            {
+                _context.EmployeeMaster.Add(obj);
+                _context.SaveChanges();
+                _res.result = true;
+                _res.message = "Employee creation successful";
+                _res.data = obj;
+                return _res;
+            }
+            catch (Exception ex)
+            {
+
+                _res.result = false;
+                _res.message =ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                 return _res;
+            }
+           
         }
 
         [HttpPut("UpdateEmployee")]
