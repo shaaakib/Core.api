@@ -113,13 +113,13 @@ namespace Core.api.Controllers
             
         }
 
-        [HttpGet("getEmployeeByCity")]
-        public EmployeeMaster getEmployeeByCity(string city)
-        {
-            //var singleRecored = _context.EmployeeMaster.SingleOrDefault(e => e.empId == id);
-            var firstRecord =  _context.EmployeeMaster.FirstOrDefault(e => e.city == city);
-            return firstRecord;
-        }
+        //[HttpGet("getEmployeeByCity")]
+        //public EmployeeMaster getEmployeeByCity(string city)
+        //{
+        //    //var singleRecored = _context.EmployeeMaster.SingleOrDefault(e => e.empId == id);
+        //    var firstRecord =  _context.EmployeeMaster.FirstOrDefault(e => e.city == city);
+        //    return firstRecord;
+        //}
 
         //[HttpPost("SaveEmployee")]
         //public commonResponseModel SaveEmployee( EmployeeMaster obj)
@@ -144,7 +144,31 @@ namespace Core.api.Controllers
 
         //}
 
-        
+        [HttpPost("SaveEmployeeAddress")]
+        public IActionResult SaveEmployeeAddress(EmployeeViewModel obj)
+        {
+            EmployeeMaster _emp = new()
+            {
+                contactNo = obj.contactNo,
+                email = obj.email,
+                empName = obj.empName
+            };
+            _context.EmployeeMaster.Add(_emp);
+            _context.SaveChanges();
+
+            EmployeeAddress _address = new()
+            {
+                address = obj.address,
+                pincode = obj.pincode,
+                state = obj.state,
+                employeeId = _emp.empId
+            };
+
+            _context.EmployeeAddress.Add(_address);
+            _context.SaveChanges();
+
+            return Ok("Created Success");
+        }
 
         [HttpPost("SaveEmployee")]
         public IActionResult SaveEmployee(EmployeeMaster obj)
@@ -194,7 +218,7 @@ namespace Core.api.Controllers
             record.empName = obj.empName;
             record.email = obj.email;
             record.contactNo = obj.contactNo;
-            record.city = obj.city;
+            //record.city = obj.city;
 
             _context.SaveChanges();
 

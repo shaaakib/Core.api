@@ -13,14 +13,14 @@ namespace Core.api.Models
         public string? email { get; set; }
         [Required,MaxLength(15)]
         public string contactNo { get; set; }
-        public string? city { get; set; }
+        //public string? city { get; set; }
     }
 
     public class EmployeeAddress
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int addressId { get; set; }
-        public string employeeId { get; set; }
+        public int employeeId { get; set; }
         public string? city { get; set; }
         public string state { get; set; }
         public string? pincode { get; set; }
