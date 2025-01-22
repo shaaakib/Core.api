@@ -38,6 +38,17 @@ namespace Core.api.Models
         public string? address { get; set; }
     }
 
+    public class EmployeeAddressViewModel
+    {
+        public int empId { get; set; }
+        [Required, MaxLength(50)]
+        public string empName { get; set; }
+        public string? email { get; set; }
+        [Required, MaxLength(15)]
+        public string contactNo { get; set; }
+        public List<EmployeeAddress> AddressList { get; set; } = new List<EmployeeAddress> { new EmployeeAddress() };
+    }
+
     public class EmployeeDropModel
     {
         public int empId { get; set; }

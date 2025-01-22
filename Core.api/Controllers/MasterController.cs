@@ -101,14 +101,20 @@ namespace Core.api.Controllers
         [HttpGet("getEmployeeById")]
         public IActionResult getEmployeeById(int id)
         {
+            EmployeeAddressViewModel _obj = new();
             var singleRecored = _context.EmployeeMaster.SingleOrDefault(e => e.empId == id);
+            _obj.empName = singleRecored.empName;
+            _obj.contactNo = singleRecored.contactNo;
+
+            var addressList = _context.EmployeeAddress.Where(a => a.employeeId == id).ToList();
+            _obj.AddressList = addressList;
             if(singleRecored == null)
             {
                 return NotFound("No record found with Previded Id");
             }
             else
             {
-                return Ok(singleRecored);
+                return Ok(_obj);
             }
             
         }
@@ -143,6 +149,36 @@ namespace Core.api.Controllers
         //    }
 
         //}
+
+        [HttpPost("CreateEmployeeWithAddress")]
+        public IActionResult CreateEmployeeWithAddress(EmployeeAddressViewModel obj)
+        {
+            EmployeeMaster _emp = new()
+            {
+                contactNo = obj.contactNo,
+                email = obj.email,
+                empName = obj.empName
+            };
+            _context.EmployeeMaster.Add(_emp);
+            _context.SaveChanges();
+
+            foreach (var item in obj.AddressList)
+            {
+                EmployeeAddress _address = new()
+                {
+                    address = item.address,
+                    pincode = item.pincode,
+                    city = item.city,
+                    state = item.state,
+                    employeeId = _emp.empId
+                };
+
+                _context.EmployeeAddress.Add(_address);
+                _context.SaveChanges();
+            }
+
+            return Ok("Created Success");
+        }
 
         [HttpPost("SaveEmployeeAddress")]
         public IActionResult SaveEmployeeAddress(EmployeeViewModel obj)
