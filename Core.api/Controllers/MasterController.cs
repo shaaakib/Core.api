@@ -37,16 +37,22 @@ namespace Core.api.Controllers
         }
 
         [HttpGet("getDropDwonModel")]
-        public List<EmployeeDropModel> getDropDwonModel()
+        public IActionResult getDropDwonModel()
         {
-            var list = (from emp in _context.EmployeeMaster
-                        select new EmployeeDropModel
-                        {
-                            empId = emp.empId,
-                            empName = emp.empName,
-                        }).ToList();
-
-            return list;
+            try
+            {
+                var list = (from emp in _context.EmployeeMaster
+                            select new EmployeeDropModel
+                            {
+                                empId = emp.empId,
+                                empName = emp.empName,
+                            }).ToList();
+               return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,ex.Message);
+            }
         }
 
         [HttpGet("searchEmployee")]
@@ -93,11 +99,18 @@ namespace Core.api.Controllers
         }
 
         [HttpGet("getEmployeeById")]
-        public EmployeeMaster getEmployeeById(int id)
+        public IActionResult getEmployeeById(int id)
         {
             var singleRecored = _context.EmployeeMaster.SingleOrDefault(e => e.empId == id);
-      
-            return singleRecored;
+            if(singleRecored == null)
+            {
+                return NotFound("No record found with Previded Id");
+            }
+            else
+            {
+                return Ok(singleRecored);
+            }
+            
         }
 
         [HttpGet("getEmployeeByCity")]
@@ -108,27 +121,70 @@ namespace Core.api.Controllers
             return firstRecord;
         }
 
+        //[HttpPost("SaveEmployee")]
+        //public commonResponseModel SaveEmployee( EmployeeMaster obj)
+        //{
+        //    commonResponseModel _res = new commonResponseModel();
+        //    try
+        //    {
+        //        _context.EmployeeMaster.Add(obj);
+        //        _context.SaveChanges();
+        //        _res.result = true;
+        //        _res.message = "Employee creation successful";
+        //        _res.data = obj;
+        //        return _res;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        _res.result = false;
+        //        _res.message =ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+        //         return _res;
+        //    }
+
+        //}
+
+        
+
         [HttpPost("SaveEmployee")]
-        public commonResponseModel SaveEmployee( EmployeeMaster obj)
+        public IActionResult SaveEmployee(EmployeeMaster obj)
         {
             commonResponseModel _res = new commonResponseModel();
             try
             {
-                _context.EmployeeMaster.Add(obj);
-                _context.SaveChanges();
-                _res.result = true;
-                _res.message = "Employee creation successful";
-                _res.data = obj;
-                return _res;
+                if (ModelState.IsValid)
+                {
+                    var isEmailExist = _context.EmployeeMaster.SingleOrDefault(e => e.email == obj.email);
+                    if (isEmailExist == null)
+                    {
+                        _context.EmployeeMaster.Add(obj);
+                        _context.SaveChanges();
+                        _res.result = true;
+                        _res.message = "Employee creation successful";
+                        _res.data = obj;
+                        return StatusCode(201,obj);
+                    }
+                    else
+                    {
+                        _res.message = "Email Alreday Exist. Please try different One";
+                        _res.result = true;
+                        return BadRequest(_res);
+                    }
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+                
             }
             catch (Exception ex)
             {
 
                 _res.result = false;
-                _res.message =ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                 return _res;
+                _res.message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return StatusCode(500,ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
-           
+
         }
 
         [HttpPut("UpdateEmployee")]

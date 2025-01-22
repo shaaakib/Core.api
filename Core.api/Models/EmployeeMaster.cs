@@ -16,6 +16,28 @@ namespace Core.api.Models
         public string? city { get; set; }
     }
 
+    public class EmployeeAddress
+    {
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int addressId { get; set; }
+        public string employeeId { get; set; }
+        public string? city { get; set; }
+        public string state { get; set; }
+        public string? pincode { get; set; }
+        public string? address { get; set; }
+    }
+
+    public class EmployeeViewModel
+    {
+        public string? empName { get; set; }
+        public string? email { get; set; }
+        public string? contactNo { get; set; }
+        public string? city { get; set; } 
+        public string? state { get; set; }
+        public string? pincode { get; set; }
+        public string? address { get; set; }
+    }
+
     public class EmployeeDropModel
     {
         public int empId { get; set; }

@@ -7,5 +7,6 @@ namespace Core.api.Models
         public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options) : base(options) { }
 
         public DbSet<EmployeeMaster> EmployeeMaster { get; set; }
+        public DbSet<EmployeeAddress> EmployeeAddress { get; set; }
     }
 }
