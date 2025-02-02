@@ -22,6 +22,14 @@ namespace Core.api.Models
         public int EmpCount { get; set; }
     }
 
+    public class SearchEmployee 
+    {
+        [Key]
+        public int empId { get; set; }
+        public string empName { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
+    }
+
     public class LoginModel
     {
         public string Email { get; set; } = string.Empty;

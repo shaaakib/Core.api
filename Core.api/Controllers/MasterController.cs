@@ -1,6 +1,7 @@
 ﻿using Core.api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Linq;
 
 namespace Core.api.Controllers
@@ -15,6 +16,45 @@ namespace Core.api.Controllers
             this._context = empDbContext;
         }
 
+        [HttpGet("searchEmployeByName")]
+        public commonResponseModel searchEmployeByName(string searchVal)
+        {
+            commonResponseModel _res = new commonResponseModel();
+            try
+            {
+                var list = _context.searchEmployeeByName(searchVal).ToList();
+                _res.result = true;
+                _res.data = list;
+                return _res;
+            }
+            catch (Exception exp)
+            {
+                _res.result = false;
+                _res.message = exp.Message;
+                return _res;
+            }
+
+        }
+
+        [HttpGet("getEmployeeCount")]
+        public commonResponseModel GetEmployeeCount()
+        {
+            commonResponseModel _res = new commonResponseModel();
+            try
+            {
+                var list = _context.getEmployeeCount().ToList();
+                _res.result = true;
+                _res.data = list;
+                return _res;
+            }
+            catch (Exception exp)
+            {
+                _res.result = false;
+                _res.message = exp.Message;
+                return _res;
+            }
+
+        }
 
         [HttpGet("getAllEmployees")]
         public commonResponseModel getAllEmployees()
