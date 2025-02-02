@@ -15,6 +15,7 @@ namespace Core.api.Controllers
             this._context = empDbContext;
         }
 
+
         [HttpGet("getAllEmployees")]
         public commonResponseModel getAllEmployees()
         {
@@ -33,7 +34,7 @@ namespace Core.api.Controllers
                 return _res;
             }
 
-            
+
         }
 
         [HttpGet("getDropDwonModel")]
@@ -204,6 +205,43 @@ namespace Core.api.Controllers
             _context.SaveChanges();
 
             return Ok("Created Success");
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginModel obj)
+        {
+            var isExists = _context.EmployeeMaster.SingleOrDefault(e => e.email == obj.Email && e.password == obj.Password);
+            if(isExists == null)
+            {
+                return StatusCode(401, "Invalid Creatials");
+            }
+            else
+            {
+                return Ok(isExists);
+            }
+        }
+
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword([FromBody] PasswordModel obj)
+        {
+            var userData = _context.EmployeeMaster.SingleOrDefault(e => e.empId == obj.empId);
+            if (userData == null)
+            {
+                return StatusCode(401, "Invalid Creatials");
+            }
+            else
+            {
+                if(userData.password == obj.ExistingPassword)
+                {
+                    userData.password = obj.NewPassword;
+                    _context.SaveChanges();
+                    return Ok(userData);
+                }
+                else
+                {
+                    return StatusCode(401, "Password does' match with existing password");
+                }
+            }
         }
 
         [HttpPost("SaveEmployee")]

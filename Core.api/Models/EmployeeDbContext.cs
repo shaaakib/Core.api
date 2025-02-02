@@ -8,5 +8,11 @@ namespace Core.api.Models
 
         public DbSet<EmployeeMaster> EmployeeMaster { get; set; }
         public DbSet<EmployeeAddress> EmployeeAddress { get; set; }
+        public DbSet<EmployeeCount> EmployeeCount { get; set; }
+
+        public IQueryable<EmployeeCount> getEmployeeCount()
+        {
+            return this.EmployeeCount.FromSqlRaw("execute GetEmployeeCount");
+        }
     }
 }
