@@ -1,4 +1,6 @@
 ﻿using Core.api.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
@@ -8,6 +10,7 @@ namespace Core.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowSpecificOrigins")]
     public class MasterController : ControllerBase
     {
         private readonly EmployeeDbContext _context;
@@ -37,6 +40,7 @@ namespace Core.api.Controllers
         }
 
         [HttpGet("getEmployeeCount")]
+        [Authorize]
         public commonResponseModel GetEmployeeCount()
         {
             commonResponseModel _res = new commonResponseModel();

@@ -16,6 +16,21 @@ namespace Core.api.Models
         public string password { get; set; } = string.Empty;
     }
 
+    public class EmployeeMasterView
+    {
+
+        public int empId { get; set; }
+        public string empName { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
+
+        public string contactNo { get; set; } = string.Empty;
+
+        public string password { get; set; } = string.Empty;
+        public string token { get; set; } = string.Empty;
+
+    }
+
+
     public class EmployeeCount
     {
         [Key]
